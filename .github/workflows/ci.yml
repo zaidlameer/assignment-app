@@ -15,7 +15,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: test_db
+          POSTGRES_DB: Assignment
         ports: ["5432:5432"]
         options: >-
           --health-cmd="pg_isready -U postgres"
@@ -28,7 +28,7 @@ jobs:
         working-directory: backend/customerManager
 
     env:
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/Assignment
       DJANGO_SETTINGS_MODULE: customerManager.settings
       PYTHONPATH: .
 
