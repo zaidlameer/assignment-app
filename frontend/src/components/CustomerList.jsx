@@ -138,8 +138,7 @@ export default function CustomerList() {
           <h2 className="text-2xl font-semibold text-gray-800">Customers</h2>
           <button
             onClick={() => {
-              setAddingCustomer(true);
-              setFormData({});
+              navigate('/addcustomer');
             }}
             className="px-3 py-1.5 bg-green-600 text-white text-sm rounded hover:bg-green-700"
           >
