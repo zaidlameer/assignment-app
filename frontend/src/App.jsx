@@ -5,7 +5,7 @@ import ProfilePage from './pages/ProfilePage';
 import LoginPage from './pages/LoginPage';
 import Header from './components/Header';
 import Dashboard from './pages/Dashboard';
-import CustomerForm from './Components/CustomerForm';
+import CustomerForm from './components/CustomerForm';
 
 function App() {
   // A helper component to check for authentication and render the header
