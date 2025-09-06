@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-// Note: This component assumes you have react-router-dom set up
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
-// This is the App component that will contain all the logic and rendering.
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
@@ -34,31 +32,22 @@ const ProfilePage = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm text-center">
-          <p className="text-gray-600 text-lg">Loading user profile...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-400 text-lg">Loading profile...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm text-center">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">User Profile</h1>
-        <p className="text-lg text-gray-700 mb-4">
-          <b className="font-semibold text-gray-900">Username:</b> {user.username}
-        </p>
-        <button
-          onClick={() => {
-            localStorage.removeItem("access");
-            localStorage.removeItem("refresh");
-            navigate("/login");
-          }}
-          className="w-full py-3 mt-4 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition-colors duration-300 ease-in-out"
-        >
-          Log Out
-        </button>
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="bg-neutral-900 p-8 rounded-2xl shadow-lg w-full max-w-sm text-center">
+        <img
+          src={`https://ui-avatars.com/api/?name=${user.username}&background=000000&color=ffffff&size=128`}
+          alt="Profile"
+          className="w-28 h-28 mx-auto rounded-full mb-6 border border-gray-700"
+        />
+        <h1 className="text-2xl font-semibold text-white">{user.username}</h1>
+        <p className="text-gray-400 mt-2">Welcome back 👋</p>
       </div>
     </div>
   );
