@@ -5,9 +5,8 @@ import { useNavigate } from "react-router-dom";
 export default function CustomerList() {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [editingCustomer, setEditingCustomer] = useState(null);
-  const [addingCustomer, setAddingCustomer] = useState(false);
-  const [formData, setFormData] = useState({});
+  const [editingCustomer, setEditingCustomer] = useState(null); // Only for editing, null means no edit modal open
+  const [formData, setFormData] = useState({}); // Form data for the edit modal
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const navigate = useNavigate();
 
@@ -53,9 +52,16 @@ export default function CustomerList() {
     }
   };
 
+  // Opens the edit modal with the customer's data
   const handleEdit = (customer) => {
     setEditingCustomer(customer);
     setFormData({ ...customer });
+  };
+
+  // Closes the edit modal and resets form data
+  const handleCloseEditModal = () => {
+    setEditingCustomer(null);
+    setFormData({}); // Clear form data
   };
 
   const handleFormChange = (e) => {
@@ -63,31 +69,24 @@ export default function CustomerList() {
     setFormData({ ...formData, [name]: value });
   };
 
+  // Handles update for an *existing* customer
   const handleUpdate = async (e) => {
     e.preventDefault();
+    if (!editingCustomer) return; // Should not happen if modal is properly controlled
+
     try {
-      if (addingCustomer) {
-        const response = await axios.post(
-          `http://127.0.0.1:8000/cms/customers/`,
-          formData,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setCustomers([...customers, response.data]);
-        setAddingCustomer(false);
-      } else {
-        const response = await axios.put(
-          `http://127.0.0.1:8000/cms/customers/${editingCustomer.id}/`,
-          formData,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setCustomers(
-          customers.map((c) => (c.id === editingCustomer.id ? response.data : c))
-        );
-        setEditingCustomer(null);
-      }
+      const response = await axios.put(
+        `http://127.0.0.1:8000/cms/customers/${editingCustomer.id}/`,
+        formData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setCustomers(
+        customers.map((c) => (c.id === editingCustomer.id ? response.data : c))
+      );
+      handleCloseEditModal(); // Close modal after successful update
     } catch (error) {
       console.error(error.response?.data || error.message);
-      alert("Failed to save customer.");
+      alert("Failed to update customer.");
     }
   };
 
@@ -138,7 +137,7 @@ export default function CustomerList() {
           <h2 className="text-2xl font-semibold text-gray-800">Customers</h2>
           <button
             onClick={() => {
-              navigate('/addcustomer');
+              navigate('/addcustomer'); // Only navigation for adding
             }}
             className="px-3 py-1.5 bg-green-600 text-white text-sm rounded hover:bg-green-700"
           >
@@ -192,7 +191,7 @@ export default function CustomerList() {
                     <td className="py-2 px-3">{customer.credit_period} days</td>
                     <td className="py-2 px-3 text-center">
                       <button
-                        onClick={() => handleEdit(customer)}
+                        onClick={() => handleEdit(customer)} // Opens the edit modal
                         className="text-blue-600 hover:underline mr-2"
                       >
                         Edit
@@ -211,12 +210,11 @@ export default function CustomerList() {
           </div>
         )}
 
-        {(editingCustomer || addingCustomer) && (
+        {/* Edit Customer Modal - only shown when editingCustomer is not null */}
+        {editingCustomer && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
             <div className="bg-white border border-gray-200 p-6 w-96">
-              <h3 className="text-lg font-semibold mb-4">
-                {addingCustomer ? "Add Customer" : "Edit Customer"}
-              </h3>
+              <h3 className="text-lg font-semibold mb-4">Edit Customer</h3>
               <form onSubmit={handleUpdate} className="space-y-3">
                 <input
                   type="text"
@@ -257,10 +255,7 @@ export default function CustomerList() {
                 <div className="flex justify-end space-x-3 mt-4">
                   <button
                     type="button"
-                    onClick={() => {
-                      setEditingCustomer(null);
-                      setAddingCustomer(false);
-                    }}
+                    onClick={handleCloseEditModal} // Close edit modal
                     className="px-3 py-1.5 bg-gray-200 text-sm hover:bg-gray-300"
                   >
                     Cancel
