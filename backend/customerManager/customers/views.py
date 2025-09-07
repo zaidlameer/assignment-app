@@ -63,14 +63,14 @@ class CustomerDetailView(APIView):
 
         # Example logic: map groups to allowed cities
         group_city_map = {
-            'Admin': None,    
-            'HeadOffice': None,          # Admin sees all cities
-            'ColomboTeam': 'Colombo',   # ColomboTeam sees only Colombo customers
-            'KandyTeam': 'Kandy',       # KandyTeam sees only Kandy customers
-            'WattalaTeam': 'Wattala',
-            'GalleTeam':'Galle',
-            'NegomboTeam':'Negombo',
-            'JaffnaTeam':'Jaffna',  
+            'Admin': None,  
+            'HeadOffice': None,              
+            'ColomboBranch': ['Colombo'],   
+            'KandyBranch': ['Kandy'],       
+            'GalleBranch': ['Galle'],
+            'WattalaBranch': ['Wattala'],
+            'JaffnaBranch':['Jaffna'],
+            'NegomboBranch':['Negombo']
         }
 
         allowed_city = None
