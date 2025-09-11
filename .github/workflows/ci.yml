@@ -31,6 +31,7 @@ jobs:
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/Assignment
       DJANGO_SETTINGS_MODULE: customerManager.settings
       PYTHONPATH: .
+      DATABASE_SSL: "False"
 
     steps:
       - uses: actions/checkout@v3
