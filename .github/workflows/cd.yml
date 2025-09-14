@@ -79,21 +79,18 @@ jobs:
   
       - name: Deploy to Azure Container App
         id: deploy
-        uses: azure/container-apps-deploy-action@v1
+        uses: azure/container-apps-deploy-action@v2
         with:
           resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
           containerAppName: ${{ secrets.AZURE_CONTAINER_APP_NAME }}
           imageToDeploy: ${{ secrets.ACR_REGISTRY }}/customer-manager:${{ needs.build-and-push.outputs.image-tag }}
-          ingress: |
-            traffic:
-              - revision: ${{ secrets.AZURE_CONTAINER_APP_NAME }}-prod
-                weight: 100
           environmentVariables: |
             DEBUG=True
             DJANGO_SECRET_KEY=secretref:django-secret-key
-            DJANGO_ALLOWED_HOSTS=*
             POSTGRES_DB=secretref:postgres-db
             POSTGRES_USER=secretref:postgres-user
             POSTGRES_PASSWORD=secretref:postgres-password
             POSTGRES_HOST=secretref:postgres-host
             POSTGRES_PORT=secretref:postgres-port
+          targetPort: 8000
+          ingress: external

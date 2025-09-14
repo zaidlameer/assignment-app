@@ -119,4 +119,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # CORS
 CORS_ALLOW_ALL_ORIGINS = True  # (for testing, later restrict by frontend domain)
 
-CSRF_TRUST_ALL_ORIGINS = True
+# CSRF Trusted Origins
+CSRF_TRUSTED_ORIGINS = [
+    "https://capp-customer-manager--prod.gentleground-7ee40fe0.eastasia.azurecontainerapps.io",
+    "http://localhost:3000",  # for local development
+    "http://127.0.0.1:3000",  # for local development
+]
