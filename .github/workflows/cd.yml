@@ -63,29 +63,32 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
+  
+      - name: Upload secrets to Azure Container App
+        run: |
+          az containerapp secret set \
+            --name ${{ secrets.AZURE_CONTAINER_APP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --secrets \
+            DJANGO_SECRET_KEY="${{ secrets.DJANGO_SECRET_KEY }}" \
+            POSTGRES_DB="${{ secrets.POSTGRES_DB }}" \
+            POSTGRES_USER="${{ secrets.POSTGRES_USER }}" \
+            POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" \
+            POSTGRES_HOST="${{ secrets.POSTGRES_HOST }}" \
+            POSTGRES_PORT="${{ secrets.POSTGRES_PORT }}"
+  
       - name: Deploy to Azure Container App
         id: deploy
         uses: azure/container-apps-deploy-action@v1
         with:
           resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
           containerAppName: ${{ secrets.AZURE_CONTAINER_APP_NAME }}
-          imageToDeploy: ${{ secrets.ACR_REGISTRY }}/suno-gen:${{ needs.build-and-push.outputs.image-tag }}
-          
-          secrets: |
-            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-            POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
-            POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
-            DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
+          imageToDeploy: ${{ secrets.ACR_REGISTRY }}/customer-manager:${{ needs.build-and-push.outputs.image-tag }}
+          environmentVariables: |
             DEBUG=True
-      
-          envVars: |
+            DJANGO_SECRET_KEY=secretref:DJANGO_SECRET_KEY
+            POSTGRES_DB=secretref:POSTGRES_DB
             POSTGRES_USER=secretref:POSTGRES_USER
             POSTGRES_PASSWORD=secretref:POSTGRES_PASSWORD
-            POSTGRES_DB=secretref:POSTGRES_DB
             POSTGRES_HOST=secretref:POSTGRES_HOST
             POSTGRES_PORT=secretref:POSTGRES_PORT
-            DEBUG=True
-              DJANGO_SECRET_KEY=secretref:DJANGO_SECRET_KEY
