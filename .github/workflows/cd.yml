@@ -63,10 +63,10 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
-      - name: Deploy to Azure Container App
-        id: deploy
-        uses: azure/container-apps-deploy-action@v1
+  
+      # --- NEW: sanitize secrets to single-line, no CR/LF ---
+      - name: Sanitize secrets
+        shell: bash
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
@@ -74,15 +74,30 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
           POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+        run: |
+          sanitize() { tr -d '\r\n' ; }
+          {
+            printf 'DJANGO_SECRET_KEY_CLEAN=';   printf '%s' "$DJANGO_SECRET_KEY"   | sanitize; echo
+            printf 'POSTGRES_DB_CLEAN=';        printf '%s' "$POSTGRES_DB"        | sanitize; echo
+            printf 'POSTGRES_USER_CLEAN=';      printf '%s' "$POSTGRES_USER"      | sanitize; echo
+            printf 'POSTGRES_PASSWORD_CLEAN=';  printf '%s' "$POSTGRES_PASSWORD"  | sanitize; echo
+            printf 'POSTGRES_HOST_CLEAN=';      printf '%s' "$POSTGRES_HOST"      | sanitize; echo
+            printf 'POSTGRES_PORT_CLEAN=';      printf '%s' "$POSTGRES_PORT"      | sanitize; echo
+          } >> "$GITHUB_ENV"
+  
+      - name: Deploy to Azure Container App
+        id: deploy
+        uses: azure/container-apps-deploy-action@v1
         with:
           resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
           containerAppName: ${{ secrets.AZURE_CONTAINER_APP_NAME }}
           imageToDeploy: ${{ secrets.ACR_REGISTRY }}/customer-manager:${{ needs.build-and-push.outputs.image-tag }}
+          # Use YAML folded style (>) and QUOTE every value
           environmentVariables: >
             DEBUG=True
-            DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-            POSTGRES_DB=${POSTGRES_DB}
-            POSTGRES_USER=${POSTGRES_USER}
-            POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-            POSTGRES_HOST=${POSTGRES_HOST}
-            POSTGRES_PORT=${POSTGRES_PORT}
+            DJANGO_SECRET_KEY="${DJANGO_SECRET_KEY_CLEAN}"
+            POSTGRES_DB="${POSTGRES_DB_CLEAN}"
+            POSTGRES_USER="${POSTGRES_USER_CLEAN}"
+            POSTGRES_PASSWORD="${POSTGRES_PASSWORD_CLEAN}"
+            POSTGRES_HOST="${POSTGRES_HOST_CLEAN}"
+            POSTGRES_PORT="${POSTGRES_PORT_CLEAN}"
