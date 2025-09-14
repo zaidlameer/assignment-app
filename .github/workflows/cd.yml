@@ -86,6 +86,7 @@ jobs:
           resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
           containerAppName: ${{ secrets.AZURE_CONTAINER_APP_NAME }}
           imageToDeploy: ${{ secrets.ACR_REGISTRY }}/customer-manager:${{ needs.build-and-push.outputs.image-tag }}
+          revisionSuffix: "stable"
           environmentVariables: |
             DEBUG=True
             DJANGO_SECRET_KEY=secretref:django-secret-key
