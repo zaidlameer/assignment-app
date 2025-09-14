@@ -71,4 +71,5 @@ jobs:
           resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
           containerAppName: ${{ secrets.AZURE_CONTAINER_APP_NAME }}
           imageToDeploy: ${{ secrets.ACR_REGISTRY }}/customer-manager:${{ needs.build-and-push.outputs.image-tag }}
-          environmentVariables: "DEBUG=True DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }} POSTGRES_DB=${{ secrets.POSTGRES_DB }} POSTGRES_USER=${{ secrets.POSTGRES_USER }} POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}"
+          environmentVariables: |
+            DEBUG=True,DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }},POSTGRES_DB=${{ secrets.POSTGRES_DB }},POSTGRES_USER=${{ secrets.POSTGRES_USER }},POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }},POSTGRES_HOST=${{ secrets.POSTGRES_HOST }},POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
