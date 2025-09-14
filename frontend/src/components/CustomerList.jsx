@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import EditCustomerModal from "./EditCustomerModal";
 
 export default function CustomerList() {
   const [customers, setCustomers] = useState([]);
@@ -62,32 +63,6 @@ export default function CustomerList() {
   const handleCloseEditModal = () => {
     setEditingCustomer(null);
     setFormData({}); // Clear form data
-  };
-
-  const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  // Handles update for an *existing* customer
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    if (!editingCustomer) return; // Should not happen if modal is properly controlled
-
-    try {
-      const response = await axios.put(
-        `http://127.0.0.1:8000/cms/customers/${editingCustomer.id}/`,
-        formData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setCustomers(
-        customers.map((c) => (c.id === editingCustomer.id ? response.data : c))
-      );
-      handleCloseEditModal(); // Close modal after successful update
-    } catch (error) {
-      console.error(error.response?.data || error.message);
-      alert("Failed to update customer.");
-    }
   };
 
   // Sorting logic
@@ -155,7 +130,6 @@ export default function CustomerList() {
                     ["title", "Title"],
                     ["first_name", "Name"],
                     ["email", "Email"],
-                    ["city", "City"],
                     ["mobile", "Mobile"],
                     ["company_name", "Company"],
                     ["credit_limit", "Credit Limit"],
@@ -184,7 +158,6 @@ export default function CustomerList() {
                       {customer.first_name} {customer.last_name}
                     </td>
                     <td className="py-2 px-3">{customer.email}</td>
-                    <td className="py-2 px-3">{customer.city}</td>
                     <td className="py-2 px-3">{customer.mobile}</td>
                     <td className="py-2 px-3">{customer.company_name || "-"}</td>
                     <td className="py-2 px-3">{customer.credit_limit}</td>
@@ -212,64 +185,28 @@ export default function CustomerList() {
 
         {/* Edit Customer Modal - only shown when editingCustomer is not null */}
         {editingCustomer && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
-            <div className="bg-white border border-gray-200 p-6 w-96">
-              <h3 className="text-lg font-semibold mb-4">Edit Customer</h3>
-              <form onSubmit={handleUpdate} className="space-y-3">
-                <input
-                  type="text"
-                  name="first_name"
-                  value={formData.first_name || ""}
-                  onChange={handleFormChange}
-                  className="w-full border border-gray-300 p-2 text-sm"
-                  placeholder="First Name"
-                  required
-                />
-                <input
-                  type="text"
-                  name="last_name"
-                  value={formData.last_name || ""}
-                  onChange={handleFormChange}
-                  className="w-full border border-gray-300 p-2 text-sm"
-                  placeholder="Last Name"
-                  required
-                />
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email || ""}
-                  onChange={handleFormChange}
-                  className="w-full border border-gray-300 p-2 text-sm"
-                  placeholder="Email"
-                  required
-                />
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city || ""}
-                  onChange={handleFormChange}
-                  className="w-full border border-gray-300 p-2 text-sm"
-                  placeholder="City"
-                  required
-                />
-                <div className="flex justify-end space-x-3 mt-4">
-                  <button
-                    type="button"
-                    onClick={handleCloseEditModal} // Close edit modal
-                    className="px-3 py-1.5 bg-gray-200 text-sm hover:bg-gray-300"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-3 py-1.5 bg-blue-600 text-white text-sm hover:bg-blue-700"
-                  >
-                    Save
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
+          <EditCustomerModal
+            customer={formData}
+            onClose={handleCloseEditModal}
+            onSave={async (values) => {
+              try {
+                const response = await axios.put(
+                  `http://127.0.0.1:8000/cms/customers/${editingCustomer.id}/`,
+                  values,
+                  { headers: { Authorization: `Bearer ${token}` } }
+                );
+                setCustomers(
+                  customers.map((c) =>
+                    c.id === editingCustomer.id ? response.data : c
+                  )
+                );
+                handleCloseEditModal();
+              } catch (error) {
+                console.error(error.response?.data || error.message);
+                alert("Failed to update customer.");
+              }
+            }}
+          />
         )}
       </div>
     </div>
