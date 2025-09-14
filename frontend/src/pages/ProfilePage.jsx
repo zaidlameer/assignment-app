@@ -15,7 +15,7 @@ const ProfilePage = () => {
       }
 
       try {
-        const response = await axios.get("http://127.0.0.1:8000/api/auth/profile/", {
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/profile/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

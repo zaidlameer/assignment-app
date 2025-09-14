@@ -20,7 +20,7 @@ export default function CustomerList() {
     }
 
     try {
-      const response = await axios.get("http://127.0.0.1:8000/cms/customers/", {
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/cms/customers/`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCustomers(response.data);
@@ -43,7 +43,7 @@ export default function CustomerList() {
     if (!window.confirm("Are you sure you want to delete this customer?")) return;
 
     try {
-      await axios.delete(`http://127.0.0.1:8000/cms/customers/${id}/`, {
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/cms/customers/${id}/`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCustomers(customers.filter((c) => c.id !== id));
@@ -191,7 +191,7 @@ export default function CustomerList() {
             onSave={async (values) => {
               try {
                 const response = await axios.put(
-                  `http://127.0.0.1:8000/cms/customers/${editingCustomer.id}/`,
+                  `${import.meta.env.VITE_API_BASE_URL}/cms/customers/${editingCustomer.id}/`,
                   values,
                   { headers: { Authorization: `Bearer ${token}` } }
                 );

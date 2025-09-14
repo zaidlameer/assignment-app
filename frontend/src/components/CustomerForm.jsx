@@ -41,7 +41,7 @@ const CustomerForm = () => {
         // This makes a GET request to your customer list endpoint
         // and extracts unique cities from the returned customers.
         const response = await axios.get(
-          "http://127.0.0.1:8000/cms/customers/",
+          `${import.meta.env.VITE_API_BASE_URL}/cms/customers/`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -128,7 +128,7 @@ const CustomerForm = () => {
       }
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/cms/customers/",
+        `${import.meta.env.VITE_API_BASE_URL}/cms/customers/`,
         formDataToSend,
         {
           headers: {
