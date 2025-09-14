@@ -70,12 +70,12 @@ jobs:
             --name ${{ secrets.AZURE_CONTAINER_APP_NAME }} \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --secrets \
-            DJANGO_SECRET_KEY="${{ secrets.DJANGO_SECRET_KEY }}" \
-            POSTGRES_DB="${{ secrets.POSTGRES_DB }}" \
-            POSTGRES_USER="${{ secrets.POSTGRES_USER }}" \
-            POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" \
-            POSTGRES_HOST="${{ secrets.POSTGRES_HOST }}" \
-            POSTGRES_PORT="${{ secrets.POSTGRES_PORT }}"
+            django-secret-key="${{ secrets.DJANGO_SECRET_KEY }}" \
+            postgres-db="${{ secrets.POSTGRES_DB }}" \
+            postgres-user="${{ secrets.POSTGRES_USER }}" \
+            postgres-password="${{ secrets.POSTGRES_PASSWORD }}" \
+            postgres-host="${{ secrets.POSTGRES_HOST }}" \
+            postgres-port="${{ secrets.POSTGRES_PORT }}"
   
       - name: Deploy to Azure Container App
         id: deploy
@@ -86,9 +86,9 @@ jobs:
           imageToDeploy: ${{ secrets.ACR_REGISTRY }}/customer-manager:${{ needs.build-and-push.outputs.image-tag }}
           environmentVariables: |
             DEBUG=True
-            DJANGO_SECRET_KEY=secretref:DJANGO_SECRET_KEY
-            POSTGRES_DB=secretref:POSTGRES_DB
-            POSTGRES_USER=secretref:POSTGRES_USER
-            POSTGRES_PASSWORD=secretref:POSTGRES_PASSWORD
-            POSTGRES_HOST=secretref:POSTGRES_HOST
-            POSTGRES_PORT=secretref:POSTGRES_PORT
+            DJANGO_SECRET_KEY=secretref:django-secret-key
+            POSTGRES_DB=secretref:postgres-db
+            POSTGRES_USER=secretref:postgres-user
+            POSTGRES_PASSWORD=secretref:postgres-password
+            POSTGRES_HOST=secretref:postgres-host
+            POSTGRES_PORT=secretref:postgres-port
