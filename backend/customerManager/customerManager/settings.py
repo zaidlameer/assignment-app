@@ -1,7 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
 import os
-import dj_database_url
 import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -17,7 +16,15 @@ SECRET_KEY = env("DJANGO_SECRET_KEY", default="unsafe-secret")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
 
-ALLOWED_HOSTS = ["*"]  # Render will inject your domain
+# Hosts
+ALLOWED_HOSTS = env.list(
+    "ALLOWED_HOSTS",
+    default=[
+        "localhost",
+        "127.0.0.1",
+        "capp-customer-manager.gentleground-7ee40fe0.eastasia.azurecontainerapps.io",
+    ],
+)
 
 # REST Framework + JWT
 REST_FRAMEWORK = {
@@ -47,7 +54,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # for static files on Render
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # for static files
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -78,13 +85,13 @@ WSGI_APPLICATION = "customerManager.wsgi.application"
 
 # Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("POSTGRES_DB"),
-        'USER': os.getenv("POSTGRES_USER"),
-        'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
-        'HOST': os.getenv("POSTGRES_HOST", "db"),  # default to db service
-        'PORT': os.getenv("POSTGRES_PORT", "5432"),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env("POSTGRES_DB"),
+        "USER": env("POSTGRES_USER"),
+        "PASSWORD": env("POSTGRES_PASSWORD"),
+        "HOST": env("POSTGRES_HOST", default="db"),  # default for docker-compose
+        "PORT": env("POSTGRES_PORT", default="5432"),
     }
 }
 
@@ -116,12 +123,21 @@ STORAGES = {
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# CORS
-CORS_ALLOW_ALL_ORIGINS = True  # (for testing, later restrict by frontend domain)
+# CORS (restrict in production!)
+CORS_ALLOWED_ORIGINS = env.list(
+    "CORS_ALLOWED_ORIGINS",
+    default=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
+)
 
 # CSRF Trusted Origins
-CSRF_TRUSTED_ORIGINS = [
-    "https://capp-customer-manager.gentleground-7ee40fe0.eastasia.azurecontainerapps.io/",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+CSRF_TRUSTED_ORIGINS = env.list(
+    "CSRF_TRUSTED_ORIGINS",
+    default=[
+        "https://capp-customer-manager.gentleground-7ee40fe0.eastasia.azurecontainerapps.io",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
+)
