@@ -3,7 +3,7 @@ name: CD
 on:
   push:
     branches: [ master ]
-    
+
 jobs:
   build-and-push:
     name: Build and push container
@@ -84,10 +84,14 @@ jobs:
           resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
           containerAppName: ${{ secrets.AZURE_CONTAINER_APP_NAME }}
           imageToDeploy: ${{ secrets.ACR_REGISTRY }}/customer-manager:${{ needs.build-and-push.outputs.image-tag }}
-          revisionSuffix: "stable"
+          ingress: |
+            traffic:
+              - revision: ${{ secrets.AZURE_CONTAINER_APP_NAME }}-prod
+                weight: 100
           environmentVariables: |
             DEBUG=True
             DJANGO_SECRET_KEY=secretref:django-secret-key
+            DJANGO_ALLOWED_HOSTS=*
             POSTGRES_DB=secretref:postgres-db
             POSTGRES_USER=secretref:postgres-user
             POSTGRES_PASSWORD=secretref:postgres-password
