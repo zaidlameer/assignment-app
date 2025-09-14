@@ -121,7 +121,7 @@ CORS_ALLOW_ALL_ORIGINS = True  # (for testing, later restrict by frontend domain
 
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
-    "https://capp-customer-manager.gentleground-7ee40fe0.eastasia.azurecontainerapps.io/,
+    "https://capp-customer-manager.gentleground-7ee40fe0.eastasia.azurecontainerapps.io/",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
