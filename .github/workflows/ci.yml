@@ -13,9 +13,9 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: Assignment
+          POSTGRES_USER: "${{ secrets.POSTGRES_USER }}"
+          POSTGRES_PASSWORD: "${{ secrets.POSTGRES_PASSWORD }}"
+          POSTGRES_DB: "${{ secrets.POSTGRES_DB }}"
         ports: ["5432:5432"]
         options: >-
           --health-cmd="pg_isready -U postgres"
@@ -28,7 +28,7 @@ jobs:
         working-directory: backend/customerManager
 
     env:
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/Assignment
+      DATABASE_URL: jdbc:postgresql://customer-manager-db.postgres.database.azure.com:5432/postgres
       DJANGO_SETTINGS_MODULE: customerManager.settings
       PYTHONPATH: .
       DATABASE_SSL: "False"

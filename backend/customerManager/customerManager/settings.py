@@ -127,10 +127,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:5173",   # Vite default
     "http://127.0.0.1:5173",
-    "https://your-frontend-domain.com",  # deployed React frontend
+    "https://assignment-hsigumf31-zaid-lameers-projects.vercel.app",  # deployed React frontend
+    "https://capp-customer-manager.gentleground-7ee40fe0.eastasia.azurecontainerapps.io",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
+    "https://capp-customer-manager.gentleground-7ee40fe0.eastasia.azurecontainerapps.io",
     "https://capp-customer-manager.gentleground-7ee40fe0.eastasia.azurecontainerapps.io",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
