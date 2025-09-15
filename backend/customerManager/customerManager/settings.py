@@ -50,9 +50,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",  
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # for static files
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -122,17 +122,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CORS (restrict in production!)
 # Allow local dev React and deployed frontend
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:3000",   # if using React dev server
-#     "http://127.0.0.1:3000",
-#     "http://localhost:5173",   # Vite default
-#     "http://127.0.0.1:5173",
-#     "https://assignment-hsigumf31-zaid-lameers-projects.vercel.app",  # deployed React frontend
-#     "https://capp-customer-manager.gentleground-7ee40fe0.eastasia.azurecontainerapps.io",
-# ]
-
-
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",   # if using React dev server
+    "http://127.0.0.1:3000",
+    "http://localhost:5173",   # Vite default
+    "http://127.0.0.1:5173",
+    "https://assignment-hsigumf31-zaid-lameers-projects.vercel.app",  # deployed React frontend
+    "https://capp-customer-manager.gentleground-7ee40fe0.eastasia.azurecontainerapps.io",
+]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://capp-customer-manager.gentleground-7ee40fe0.eastasia.azurecontainerapps.io",
@@ -142,4 +139,3 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
-
