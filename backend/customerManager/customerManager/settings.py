@@ -87,7 +87,7 @@ DATABASES = {
         "NAME": os.getenv("POSTGRES_DB"),
         "USER": os.getenv("POSTGRES_USER"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": os.getenv("POSTGRES_HOST"),  # default for docker-compose
+        "HOST": os.getenv("POSTGRES_HOST"),
         "PORT": os.getenv("POSTGRES_PORT"),
     }
 }
@@ -121,16 +121,19 @@ STORAGES = {
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CORS (restrict in production!)
+# Allow local dev React and deployed frontend
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    "http://localhost:3000",   # if using React dev server
     "http://127.0.0.1:3000",
-    # Add your frontend deployment URL if using Vercel/Netlify/etc.
-    "https://your-frontend.vercel.app",
+    "http://localhost:5173",   # Vite default
+    "http://127.0.0.1:5173",
+    "https://your-frontend-domain.com",  # deployed React frontend
 ]
 
-# CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
     "https://capp-customer-manager.gentleground-7ee40fe0.eastasia.azurecontainerapps.io",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
 ]
