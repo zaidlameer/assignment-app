@@ -128,6 +128,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",   # Vite default
     "http://127.0.0.1:5173",
     "https://assignment-hsigumf31-zaid-lameers-projects.vercel.app",  # deployed React frontend
+    "https://assignment-app-theta.vercel.app"
     "https://capp-customer-manager.gentleground-7ee40fe0.eastasia.azurecontainerapps.io",
 ]
 
