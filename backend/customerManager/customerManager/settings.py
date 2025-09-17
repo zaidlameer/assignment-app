@@ -110,6 +110,10 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
+# for azure media to work
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Whitenoise storage for compressed static files
 STORAGES = {
     "staticfiles": {
