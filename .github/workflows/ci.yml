@@ -46,9 +46,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run migrations
-        run: python manage.py migrate
-
   frontend:
     runs-on: ubuntu-latest
 
