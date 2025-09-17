@@ -116,9 +116,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Whitenoise storage for compressed static files
 STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "OPTIONS": {
+            "location": BASE_DIR / "media",
+        },
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    }
+    },
 }
 
 # Default primary key field type
